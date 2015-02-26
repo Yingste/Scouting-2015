@@ -1,0 +1,1348 @@
+<html>
+
+<body style="background-color: #FFFFFF;" onmouseover="update()">
+
+<head><title>Scouting 2015</title>
+<!-- css styling -->
+<link href="style.css" rel="stylesheet" />
+<link href="bootstrap.min.css" rel="stylesheet" />
+<link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+<!-- Favicon -->
+<link rel="icon"  href="favicon.ico" />
+
+<!-- Begining of the ajax code to determine what teams are possible based on match. see the teams.php for more info -->
+<script>
+//declare team num zone variables
+var r1;
+var r2;
+var r3;
+var b1;
+var b2;
+var b3;
+
+//handle the submitting of the match to the php file
+function getteam(str)
+{
+var xmlhttp;
+if (str.length==0)
+  {
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    //break apart the string we recieve and apply it to the team zone variables
+r1=xmlhttp.responseText.substring(0,4);
+r2=xmlhttp.responseText.substring(5,9);
+r3=xmlhttp.responseText.substring(10,14);
+b1=xmlhttp.responseText.substring(15,19);
+b2=xmlhttp.responseText.substring(20,24);
+b3=xmlhttp.responseText.substring(25,29);
+robot();
+//handle setting the match to what is in the match field
+localStorage.matchnum = document.getElementById("matchid").value;
+localStorage.zone = document.getElementById("robot").value;
+    }
+  }
+xmlhttp.open("POST","teams.php?q="+str,true);
+xmlhttp.send();
+}
+
+
+</script>
+
+</head>
+
+
+<span style="color: white; font-size: 24px">
+
+
+<!-- script to handle what team you track based on zone and the teams.php file -->
+<script>
+function robot()
+{
+	if (document.getElementById("robot").value==1)
+	{
+	document.getElementById("teamid").value = r1;
+	}
+	if (document.getElementById("robot").value==2)
+	{
+	document.getElementById("teamid").value = r2;
+	}
+	if (document.getElementById("robot").value==3)
+	{
+	document.getElementById("teamid").value = r3;
+	}
+	if (document.getElementById("robot").value==4)
+	{
+	document.getElementById("teamid").value = b1;
+	}
+	if (document.getElementById("robot").value==5)
+	{
+	document.getElementById("teamid").value = b2;
+	}
+	if (document.getElementById("robot").value==6)
+	{
+	document.getElementById("teamid").value = b3;
+	}
+}
+</script>
+
+
+<center>
+<!-- update team button incase auto isnt working -->
+<!--<input type="button" onclick="robot();update()" value="Get Team" class="btn btn-default">-->
+
+<!-- Creates the values you want to track -->
+<form method="post" action="form.php">
+
+<div id="fwindc1">
+<center>
+	<table style="width:70%">
+		<tr>
+			<td style="width:30%"><!-- what zone you scout for. not part of the form -->
+				<label for="robot" class="col-lg-2 control-label">Robot:</label>
+				<select id="robot" onclick="robot()" onchange="getteam(matchid.value)" class="form-control">
+					<option value="1">Red 1</option>
+					<option value="2">Red 2</option>
+					<option value="3">Red 3</option>
+					<option value="4">Blue 1</option>
+					<option value="5">Blue 2</option>
+					<option value="6">Blue 3</option>
+				</select>
+			</td>
+			<td style="width:30%">
+				<label for="matchid" class="col-lg-2 control-label">Match:</label> <input type="number" name="match" autocomplete="off" id="matchid" class="form-control" onchange="getteam(this.value)" onkeyup="getteam(this.value)" />
+			</td>
+			<td style="width:30%">
+				<label for="teamid" class="col-lg-2 control-label">Team:</label>  <input type="number" name="team" autocomplete="off" id="teamid" class="form-control" />
+			</td>
+			<td style="width:10%">
+				<br />
+				<input type="submit" value="Submit" style="font-size: 18px;" onclick="submit()" class="btn btn-success btn-xs" id="submit" />
+			</td>
+		</tr>
+	</table>
+</center>
+</div>
+
+
+
+
+
+</center>
+
+
+
+
+
+
+
+
+<!-- 
+Values that I am tracking so far:
+push_totes, 1 or 0
+push_totes_max, any number
+maneuverability
+traverse_humps
+traverse_humps_score
+
+ -->
+
+<input type="number" value="0" name="push_totes" hidden id="push_totes" /> 
+<input type="number" value="0" name="maneuver" hidden id="maneuver" />
+<input type="number" value="0" name="traverse_humps" hidden id="traverse_humps" />
+<input type="number" value="0" name="traverse_humps_score" hidden id="traverse_humps_score" />
+<input type="number" value="0" name="can_lift" hidden id="can_lift" />
+
+
+<center>
+	<table style="width: 90%; border: 1px ;">
+		<tr>
+			<!-- Window 1 -->
+			<td style="width: 28%;">
+				<center>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<table  style="width: 100%;">
+								<tr>
+									<td style="width: 87%;" onclick="window_1_open()">
+										<font style="font-size:20px; color: white;">Totes Pushed</font>
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_1_back()"><i class="fa fa-caret-left"></i></button>
+										</center>
+									</td>
+									<td style="width: 3%;">
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_1_close()"><i class="fa fa-times"></i></button>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="panel-body" id="window_1_field">
+							<center>
+								<table style="width: 100%;">    					
+									<tr>
+										<td>
+											<center>
+												<div id="window_1_description">
+													<div id="window_1_panel_1_description">
+														<h3>Did the robot push around totes?</h3>
+													<br>
+													</div>
+													<div id="window_1_panel_2_description" style="display: none;">
+														<h3>How many did they push at once?</h3>
+													<br>
+													</div>
+												</div>
+												
+											</center>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<div id="window_1_body">
+												<div id="window_1_panel_1_body">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 50%;">
+																<center>
+																	<button class="btn btn-success" type="button" onclick="window_1_panel_1_true()"><h3>&nbsp; <i class="fa fa-check"></i> &nbsp;</h3></button>
+								    								</center>
+								    							</td>
+								    							<td style="width: 50%;">
+								    								<center>	
+								    									<button class="btn btn-danger"  type="button" onclick="window_1_panel_1_false()"><h3>&nbsp; <i class="fa fa-times"></i> &nbsp;</h3></button>
+																</center>
+															</td>
+														</tr>
+													</table>
+												</div>
+												<div id="window_1_panel_2_body"  style="display: none;">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 40%">
+															</td>
+															<td style="width: 20%;">
+																<center>
+																	<label for="push_totes_max" class="col-lg-2 control-label"></label>  <input type="number" name="push_totes_max" autocomplete="off" value="0" id="push_totes_max" class="form-control" />
+																</center>
+															</td>
+															<td style="width: 40%">
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</center>
+						</div>
+					</div>
+				</center>
+			</td>
+			<td style="width: 3%;"></td>
+			
+			
+			
+			
+			
+			<!-- Window 2 -->
+			<td style="width: 28%;">
+				<center>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<table  style="width: 100%;">
+								<tr>
+									<td style="width: 87%;" onclick="window_2_open()">
+										<font style="font-size:20px; color: white;">Maneuverability</font>
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_2_back()" hidden><i class="fa fa-caret-left" hidden></i></button>
+										</center>
+									</td>
+									<td style="width: 3%;">
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_2_close()"><i class="fa fa-times"></i></button>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="panel-body" id="window_2_field">
+							<center>
+								<table style="width: 100%;">    					
+									<tr>
+										<td>
+											<center>
+												<div id="window_2_description">
+													<div id="window_2_panel_1_description">
+														<h3>How well did the maneuver?</h3>
+													<br>
+													</div>
+													
+												</div>
+												
+											</center>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<div id="window_2_body">
+												<div id="window_2_panel_1_body">
+													<div class="window_2_panel_1_star-rating"> 
+														<center>
+															<h2>
+																<div onmouseout="window_2_panel_1_star_clear()">
+																	<div class="fa fa-star-o" id="window_2_panel_1_star_1" onclick="window_2_panel_1_star_1_true()" onmouseover="window_2_panel_1_star_1_false()"></div>
+																	<div class="fa fa-star-o" id="window_2_panel_1_star_2" onclick="window_2_panel_1_star_2_true()" onmouseover="window_2_panel_1_star_2_false()"></div>
+																	<div class="fa fa-star-o" id="window_2_panel_1_star_3" onclick="window_2_panel_1_star_3_true()" onmouseover="window_2_panel_1_star_3_false()"></div>
+																	<div class="fa fa-star-o" id="window_2_panel_1_star_4" onclick="window_2_panel_1_star_4_true()" onmouseover="window_2_panel_1_star_4_false()"></div>
+																	<div class="fa fa-star-o" id="window_2_panel_1_star_5" onclick="window_2_panel_1_star_5_true()" onmouseover="window_2_panel_1_star_5_false()"></div>
+																</div>
+															</h2>
+														</center>	
+													</div>
+												</div>
+												
+											</div>
+										</td>
+									</tr>
+								</table>
+							</center>
+						</div>
+					</div>
+				</center>
+			</td>
+			<td style="width: 3%;"></td>
+			
+			
+			
+			
+			
+			
+			<!-- Window 3 -->
+			<td style="width: 28%;">
+				<center>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<table  style="width: 100%;">
+								<tr>
+									<td style="width: 87%;" onclick="window_3_open()">
+										<font style="font-size:20px; color: white;">Traverse Hump</font>
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_3_back()"><i class="fa fa-caret-left"></i></button>
+										</center>
+									</td>
+									<td style="width: 3%;">
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_3_close()"><i class="fa fa-times"></i></button>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="panel-body" id="window_3_field">
+							<center>
+								<table style="width: 100%;">    					
+									<tr>
+										<td>
+											<center>
+												<div id="window_3_description">
+													<div id="window_3_panel_1_description">
+														<h3>Did they drive over the humps?</h3>
+													<br>
+													</div>
+													<div id="window_3_panel_2_description" style="display: none;">
+														<h3>How stable were they?</h3>
+													<br>
+													</div>
+												</div>
+												
+											</center>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<div id="window_3_body">
+												<div id="window_3_panel_1_body">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 50%;">
+																<center>
+																	<button class="btn btn-success" type="button" onclick="window_3_panel_1_true()"><h3>&nbsp; <i class="fa fa-check"></i> &nbsp;</h3></button>
+								    								</center>
+								    							</td>
+								    							<td style="width: 50%;">
+								    								<center>	
+								    									<button class="btn btn-danger"  type="button" onclick="window_3_panel_1_false()"><h3>&nbsp; <i class="fa fa-times"></i> &nbsp;</h3></button>
+																</center>
+															</td>
+														</tr>
+													</table>
+												</div>
+												<div id="window_3_panel_2_body"  style="display: none;">
+													<div class="window_3_panel_2_star-rating"> 
+														<center>
+															<h2>
+																<div onmouseout="window_3_panel_2_star_clear()">
+																	<div class="fa fa-star-o" id="window_3_panel_2_star_1" onclick="window_3_panel_2_star_1_true()" onmouseover="window_3_panel_2_star_1_false()"></div>
+																	<div class="fa fa-star-o" id="window_3_panel_2_star_2" onclick="window_3_panel_2_star_2_true()" onmouseover="window_3_panel_2_star_2_false()"></div>
+																	<div class="fa fa-star-o" id="window_3_panel_2_star_3" onclick="window_3_panel_2_star_3_true()" onmouseover="window_3_panel_2_star_3_false()"></div>
+																	<div class="fa fa-star-o" id="window_3_panel_2_star_4" onclick="window_3_panel_2_star_4_true()" onmouseover="window_3_panel_2_star_4_false()"></div>
+																	<div class="fa fa-star-o" id="window_3_panel_2_star_5" onclick="window_3_panel_2_star_5_true()" onmouseover="window_3_panel_2_star_5_false()"></div>
+																</div>
+															</h2>
+														</center>	
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</center>
+						</div>
+					</div>
+				</center>
+			</td>
+		</tr>
+		<tr>
+		
+		
+		
+		
+		
+		
+			<!-- Window 4 -->
+			<td style="width: 28%;">
+				<center>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<table  style="width: 100%;">
+								<tr>
+									<td style="width: 87%;" onclick="window_4_open()">
+										<font style="font-size:20px; color: white;">Can Lifted</font>
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_4_back()"><i class="fa fa-caret-left"></i></button>
+										</center>
+									</td>
+									<td style="width: 3%;">
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_4_close()"><i class="fa fa-times"></i></button>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="panel-body" id="window_4_field">
+							<center>
+								<table style="width: 100%;">    					
+									<tr>
+										<td>
+											<center>
+												<div id="window_4_description">
+													<div id="window_4_panel_1_description">
+														<h3>Did they lift a can?</h3>
+													<br>
+													</div>
+													<div id="window_4_panel_2_description" style="display: none;">
+														<h3>How many totes high was it lifted?</h3>
+													<br>
+													</div>
+												</div>
+												
+											</center>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<div id="window_4_body">
+												<div id="window_4_panel_1_body">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 50%;">
+																<center>
+																	<button class="btn btn-success" type="button" onclick="window_4_panel_1_true()"><h3>&nbsp; <i class="fa fa-check"></i> &nbsp;</h3></button>
+								    								</center>
+								    							</td>
+								    							<td style="width: 50%;">
+								    								<center>	
+								    									<button class="btn btn-danger"  type="button" onclick="window_4_panel_1_false()"><h3>&nbsp; <i class="fa fa-times"></i> &nbsp;</h3></button>
+																</center>
+															</td>
+														</tr>
+													</table>
+												</div>
+												<div id="window_4_panel_2_body"  style="display: none;">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 40%">
+															</td>
+															<td style="width: 20%;">
+																<center>
+																	<label for="can_lift_max" class="col-lg-2 control-label"></label>  <input type="number" name="can_lift_max" autocomplete="off" value="0" id="can_lift_max" class="form-control" />
+																</center>
+															</td>
+															<td style="width: 40%">
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																<table style="width: 100%;">
+																	<tr>
+																		<td style="width: 10%;">
+																		</td>
+																		<td style="width: 30%;">
+																			<div class="checkbox">
+																				<label>
+																					<input type="checkbox" name="can_lift_upright" id="can_lift_upright"> Upright Cans?
+																				</label>
+																			</div>
+																		</td>
+																		<td style="width: 10%;">
+																		</td>
+																		<td style="width: 30%;">
+																			<div class="checkbox">
+																				<label>
+																					<input type="checkbox" name="can_lift_step" id="can_lift_step"> Grab from step?
+																				</label>
+																			</div>
+																		</td>
+																		<td style="width: 10%;">
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</center>
+						</div>
+					</div>
+				</center>
+			</td>
+			<td style="width: 3%;"></td>
+			
+			
+			
+			
+			
+			
+			<!-- Window 5 -->
+			<td style="width: 28%;">
+				<center>
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<table  style="width: 100%;">
+								<tr>
+									<td style="width: 87%;" onclick="window_5_open()">
+										<font style="font-size:20px; color: white;">Totes Lifted</font>
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_5_back()"><i class="fa fa-caret-left"></i></button>
+										</center>
+									</td>
+									<td style="width: 3%;">
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_5_close()"><i class="fa fa-times"></i></button>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="panel-body" id="window_5_field">
+							<center>
+								<table style="width: 100%;">    					
+									<tr>
+										<td>
+											<center>
+												<div id="window_5_description">
+													<div id="window_5_panel_1_description">
+														<h3>Did they pick up totes?</h3>
+													<br>
+													</div>
+													<div id="window_5_panel_2_description" style="display: none;">
+														<h3>How many did they pick up at once?</h3>
+													<br>
+													</div>
+												</div>
+												
+											</center>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<div id="window_5_body">
+												<div id="window_5_panel_1_body">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 50%;">
+																<center>
+																	<button class="btn btn-success" type="button" onclick="window_5_panel_1_true()"><h3>&nbsp; <i class="fa fa-check"></i> &nbsp;</h3></button>
+								    								</center>
+								    							</td>
+								    							<td style="width: 50%;">
+								    								<center>	
+								    									<button class="btn btn-danger"  type="button" onclick="window_5_panel_1_false()"><h3>&nbsp; <i class="fa fa-times"></i> &nbsp;</h3></button>
+																</center>
+															</td>
+														</tr>
+													</table>
+												</div>
+												<div id="window_5_panel_2_body"  style="display: none;">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 40%">
+															</td>
+															<td style="width: 20%;">
+																<center>
+																	<label for="lift_totes_max" class="col-lg-2 control-label"></label>  <input type="number" name="lift_totes_max" autocomplete="off" value="0" id="lift_totes_max" class="form-control" />
+																</center>
+															</td>
+															<td style="width: 40%">
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</center>
+						</div>
+					</div>
+				</center>
+			</td>
+			<td style="width: 3%;"></td>
+			
+			
+			
+			
+			
+			
+			<!-- Window 6 -->
+			<td style="width: 28%;">
+				<center>
+					<div class="panel panel-primary" style="display: none;" id="window_6">
+						<div class="panel-heading">
+							<table  style="width: 100%;">
+								<tr>
+									<td style="width: 87%;" onclick="window_6_open()">
+										<font style="font-size:20px; color: white;">Totes Stacks</font>
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_6_back()" hidden><i class="fa fa-caret-left" hidden></i></button>
+										</center>
+									</td>
+									<td style="width: 3%;">
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_6_close()"><i class="fa fa-times"></i></button>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="panel-body" id="window_6_field">
+							<center>
+								<table style="width: 100%;">    					
+									<tr>
+										<td>
+											<center>
+												<div id="window_6_description">
+													<div id="window_6_panel_2_description" style="display: none;">
+														<h3>How many did they push at once?</h3>
+													<br>
+													</div>
+												</div>
+												
+											</center>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<div id="window_6_body">
+												<div id="window_6_panel_1_body">
+													<table style="width: 100%; display: none;">
+														<tr>
+															<td style="width: 50%;">
+																<center>
+																	<button class="btn btn-success" type="button" onclick="window_6_panel_1_true()"><h3>&nbsp; <i class="fa fa-check"></i> &nbsp;</h3></button>
+								    								</center>
+								    							</td>
+								    							<td style="width: 50%;">
+								    								<center>	
+								    									<button class="btn btn-danger"  type="button" onclick="window_6_panel_1_false()"><h3>&nbsp; <i class="fa fa-times"></i> &nbsp;</h3></button>
+																</center>
+															</td>
+														</tr>
+													</table>
+													
+													<table style="width: 100%;">
+														<tr>
+															<td colspan="3">
+																<h3>How many stacks did they make?</h3>
+															</td>
+														</tr>
+														<tr>
+															<td style="width: 40%">
+															</td>
+															<td style="width: 20%;">
+																<center>
+																	<label for="tote_stacks" class="col-lg-2 control-label"></label>  <input type="number" name="tote_stacks" autocomplete="off" value="0" id="tote_stacks" class="form-control" />
+																</center>
+															</td>
+															<td style="width: 40%">
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3">
+																<h3>What was the average height?</h3>
+															</td>
+														</tr>
+														<tr>
+															<td style="width: 40%">
+															</td>
+															<td style="width: 20%;">
+																<center>
+																	<label for="tote_stacks_average" class="col-lg-2 control-label"></label>  <input type="number" name="tote_stacks_average" autocomplete="off" value="0" id="tote_stacks_average" class="form-control" />
+																</center>
+															</td>
+															<td style="width: 40%">
+															</td>
+														</tr>
+													</table>
+												</div>
+												<div id="window_6_panel_2_body"  style="display: none;">
+													<!-- no panel 2 for this window -->
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</center>
+						</div>
+					</div>
+				</center>
+			</td>
+		</tr>
+	</table>
+</center>
+</form>
+
+
+
+<script>
+var window_1_panel;
+
+function window_1_close()
+{
+document.getElementById("window_1_field").style.display = 'none';
+}
+
+function window_1_open()
+{
+document.getElementById("window_1_field").style.display = 'block';
+}
+
+function window_1_back()
+{
+	if (window_1_panel == "2")
+	{
+	window_1_panel = 1;
+	document.getElementById("window_1_panel_2_description").style.display = 'none';
+	document.getElementById("window_1_panel_2_body").style.display = 'none';
+	document.getElementById("window_1_panel_1_description").style.display = 'block';
+	document.getElementById("window_1_panel_1_body").style.display = 'block';
+	}
+}
+
+function window_1_panel_1_true()
+{
+	window_1_panel = 2;
+	document.getElementById("window_1_panel_2_description").style.display = 'block';
+	document.getElementById("window_1_panel_2_body").style.display = 'block';
+	document.getElementById("window_1_panel_1_description").style.display = 'none';
+	document.getElementById("window_1_panel_1_body").style.display = 'none';
+	document.getElementById("push_totes").value = 1;
+}
+
+function window_1_panel_1_false()
+{
+	window_1_close();
+	document.getElementById("push_totes").value = 0;
+	document.getElementById("push_totes_max").value = 0;
+}
+</script>
+
+<script>
+var window_2_panel;
+
+function window_2_close()
+{
+document.getElementById("window_2_field").style.display = 'none';
+}
+
+function window_2_open()
+{
+document.getElementById("window_2_field").style.display = 'block';
+}
+
+function window_2_back()
+{
+	if (window_2_panel == "2")
+	{
+	window_2_panel = 1;
+	document.getElementById("window_2_panel_2_description").style.display = 'none';
+	document.getElementById("window_2_panel_2_body").style.display = 'none';
+	document.getElementById("window_2_panel_1_description").style.display = 'block';
+	document.getElementById("window_2_panel_1_body").style.display = 'block';
+	}
+}
+
+function window_2_panel_1_true()
+{
+	window_2_panel = 2;
+	document.getElementById("window_2_panel_2_description").style.display = 'block';
+	document.getElementById("window_2_panel_2_body").style.display = 'block';
+	document.getElementById("window_2_panel_1_description").style.display = 'none';
+	document.getElementById("window_2_panel_1_body").style.display = 'none';
+	document.getElementById("push_totes").value = 1;
+}
+
+function window_2_panel_1_false()
+{
+	window_2_close();
+	document.getElementById("push_totes").value = 0;
+	document.getElementById("push_totes_max").value = 0;
+}
+</script>
+
+<script>
+var window_3_panel;
+
+function window_3_close()
+{
+document.getElementById("window_3_field").style.display = 'none';
+}
+
+function window_3_open()
+{
+document.getElementById("window_3_field").style.display = 'block';
+}
+
+function window_3_back()
+{
+	if (window_3_panel == "2")
+	{
+	window_3_panel = 1;
+	document.getElementById("window_3_panel_2_description").style.display = 'none';
+	document.getElementById("window_3_panel_2_body").style.display = 'none';
+	document.getElementById("window_3_panel_1_description").style.display = 'block';
+	document.getElementById("window_3_panel_1_body").style.display = 'block';
+	}
+}
+
+function window_3_panel_1_true()
+{
+	window_3_panel = 2;
+	document.getElementById("window_3_panel_2_description").style.display = 'block';
+	document.getElementById("window_3_panel_2_body").style.display = 'block';
+	document.getElementById("window_3_panel_1_description").style.display = 'none';
+	document.getElementById("window_3_panel_1_body").style.display = 'none';
+	document.getElementById("traverse_humps").value = 1;
+}
+
+function window_3_panel_1_false()
+{
+	window_3_close();
+	document.getElementById("traverse_humps").value = 0;
+	document.getElementById("traverse_humps_score").value = 0;
+}
+</script>
+
+<script>
+var window_4_panel;
+
+function window_4_close()
+{
+document.getElementById("window_4_field").style.display = 'none';
+}
+
+function window_4_open()
+{
+document.getElementById("window_4_field").style.display = 'block';
+}
+
+function window_4_back()
+{
+	if (window_4_panel == "2")
+	{
+	window_4_panel = 1;
+	document.getElementById("window_4_panel_2_description").style.display = 'none';
+	document.getElementById("window_4_panel_2_body").style.display = 'none';
+	document.getElementById("window_4_panel_1_description").style.display = 'block';
+	document.getElementById("window_4_panel_1_body").style.display = 'block';
+	}
+}
+
+function window_4_panel_1_true()
+{
+	window_4_panel = 2;
+	document.getElementById("window_4_panel_2_description").style.display = 'block';
+	document.getElementById("window_4_panel_2_body").style.display = 'block';
+	document.getElementById("window_4_panel_1_description").style.display = 'none';
+	document.getElementById("window_4_panel_1_body").style.display = 'none';
+	document.getElementById("can_lift").value = 1;
+}
+
+function window_4_panel_1_false()
+{
+	window_4_close();
+	document.getElementById("can_lift").value = 0;
+	document.getElementById("can_lift_max").value = 0;
+	document.getElementById("can_lift_step").value = 0;
+	document.getElementById("can_lift_upright").value = 0;
+}
+</script>
+
+<script>
+var window_5_panel;
+
+function window_5_close()
+{
+document.getElementById("window_5_field").style.display = 'none';
+}
+
+function window_5_open()
+{
+document.getElementById("window_5_field").style.display = 'block';
+}
+
+function window_5_back()
+{
+	if (window_5_panel == "2")
+	{
+	window_5_panel = 1;
+	document.getElementById("window_5_panel_2_description").style.display = 'none';
+	document.getElementById("window_5_panel_2_body").style.display = 'none';
+	document.getElementById("window_5_panel_1_description").style.display = 'block';
+	document.getElementById("window_5_panel_1_body").style.display = 'block';
+	}
+}
+
+function window_5_panel_1_true()
+{
+	window_5_panel = 2;
+	document.getElementById("window_5_panel_2_description").style.display = 'block';
+	document.getElementById("window_5_panel_2_body").style.display = 'block';
+	document.getElementById("window_5_panel_1_description").style.display = 'none';
+	document.getElementById("window_5_panel_1_body").style.display = 'none';
+	document.getElementById("window_6").style.display = 'block';
+	document.getElementById("lift_totes").value = 1;
+}
+
+function window_5_panel_1_false()
+{
+	window_5_close();
+	document.getElementById("window_6").style.display = 'none';
+	document.getElementById("lift_totes").value = 0;
+	document.getElementById("lift_totes_max").value = 0;
+	document.getElementById("tote_stacks").value = 0;
+	document.getElementById("tote_stacks_average").value = 0;
+}
+</script>
+
+<script>
+var window_6_panel;
+
+function window_6_close()
+{
+document.getElementById("window_6_field").style.display = 'none';
+}
+
+function window_6_open()
+{
+document.getElementById("window_6_field").style.display = 'block';
+}
+
+function window_6_back()
+{
+	if (window_6_panel == "2")
+	{
+	window_6_panel = 1;
+	document.getElementById("window_6_panel_2_description").style.display = 'none';
+	document.getElementById("window_6_panel_2_body").style.display = 'none';
+	document.getElementById("window_6_panel_1_description").style.display = 'block';
+	document.getElementById("window_6_panel_1_body").style.display = 'block';
+	}
+}
+
+function window_6_panel_1_true()
+{
+	window_6_panel = 2;
+	document.getElementById("window_6_panel_2_description").style.display = 'block';
+	document.getElementById("window_6_panel_2_body").style.display = 'block';
+	document.getElementById("window_6_panel_1_description").style.display = 'none';
+	document.getElementById("window_6_panel_1_body").style.display = 'none';
+	document.getElementById("tote_stacks").value = 1;
+}
+
+function window_6_panel_1_false()
+{
+	window_6_close();
+	document.getElementById("tote_stacks").value = 0;
+	document.getElementById("tote_stacks_average").value = 0;
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- star scripts -->
+<!-- window 2 panel 1 -->
+<script>
+var window_2_panel_1_star_click = 0;
+
+function window_2_panel_1_star_1_true()
+{
+window_2_panel_1_star_click = 1;
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+document.getElementById("maneuver").value = 1;
+}
+function window_2_panel_1_star_2_true()
+{
+window_2_panel_1_star_click = 2;
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+document.getElementById("maneuver").value = 2;
+}
+function window_2_panel_1_star_3_true()
+{
+window_2_panel_1_star_click = 3;
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+document.getElementById("maneuver").value = 3;
+}
+function window_2_panel_1_star_4_true()
+{
+window_2_panel_1_star_click = 4;
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+document.getElementById("maneuver").value = 4;
+}
+function window_2_panel_1_star_5_true()
+{
+window_2_panel_1_star_click = 5;
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star");
+document.getElementById("maneuver").value = 5;
+}
+
+function window_2_panel_1_star_1_false()
+{
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+}
+function window_2_panel_1_star_2_false()
+{
+window_2_panel_1_star_1_false();
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+}
+function window_2_panel_1_star_3_false()
+{
+window_2_panel_1_star_2_false();
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star");
+}
+function window_2_panel_1_star_4_false()
+{
+window_2_panel_1_star_3_false();
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star");
+}
+function window_2_panel_1_star_5_false()
+{
+window_2_panel_1_star_4_false();
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star");
+}
+
+function window_2_panel_1_star_clear()
+{
+if (window_2_panel_1_star_click == 1)
+{
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+} else if (window_2_panel_1_star_click == 2)
+{
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+} else if (window_2_panel_1_star_click == 3)
+{
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+} else if (window_2_panel_1_star_click == 4)
+{
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+} else if (window_2_panel_1_star_click == 5)
+{
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star");
+} else if (window_2_panel_1_star_click == 0)
+{
+document.getElementById("window_2_panel_1_star_1").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_2").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_2_panel_1_star_5").setAttribute("class", "fa fa-star-o");
+}
+
+
+}
+
+
+</script>
+
+<!-- window 3 panel 2 -->
+<script>
+var window_3_panel_2_star_click = 0;
+
+function window_3_panel_2_star_1_true()
+{
+window_3_panel_2_star_click = 1;
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+document.getElementById("traverse_humps").value = 1;
+}
+function window_3_panel_2_star_2_true()
+{
+window_3_panel_2_star_click = 2;
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+document.getElementById("traverse_humps_score").value = 2;
+}
+function window_3_panel_2_star_3_true()
+{
+window_3_panel_2_star_click = 3;
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+document.getElementById("traverse_humps_score").value = 3;
+}
+function window_3_panel_2_star_4_true()
+{
+window_3_panel_2_star_click = 4;
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+document.getElementById("traverse_humps_score").value = 4;
+}
+function window_3_panel_2_star_5_true()
+{
+window_3_panel_2_star_click = 5;
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star");
+document.getElementById("traverse_humps_score").value = 5;
+}
+
+function window_3_panel_2_star_1_false()
+{
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+}
+function window_3_panel_2_star_2_false()
+{
+window_3_panel_2_star_1_false();
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+}
+function window_3_panel_2_star_3_false()
+{
+window_3_panel_2_star_2_false();
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star");
+}
+function window_3_panel_2_star_4_false()
+{
+window_3_panel_2_star_3_false();
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star");
+}
+function window_3_panel_2_star_5_false()
+{
+window_3_panel_2_star_4_false();
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star");
+}
+
+function window_3_panel_2_star_clear()
+{
+if (window_3_panel_2_star_click == 1)
+{
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+} else if (window_3_panel_2_star_click == 2)
+{
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+} else if (window_3_panel_2_star_click == 3)
+{
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+} else if (window_3_panel_2_star_click == 4)
+{
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+} else if (window_3_panel_2_star_click == 5)
+{
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star");
+} else if (window_3_panel_2_star_click == 0)
+{
+document.getElementById("window_3_panel_2_star_1").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_2").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_3").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_4").setAttribute("class", "fa fa-star-o");
+document.getElementById("window_3_panel_2_star_5").setAttribute("class", "fa fa-star-o");
+}
+
+
+}
+
+
+</script>
+
+
+
+
+
+
+
+<script>
+function update()
+{
+localStorage.matchnum = document.getElementById("matchid").value;
+localStorage.zone = document.getElementById("robot").value;
+}
+</script>
+
+<!-- this has to be the last script to run -->
+<script>
+//add +1 to the match number
+localStorage.matchnum = Number(localStorage.matchnum)+1;
+//display the stored match value into the match field
+document.getElementById("matchid").value = localStorage.matchnum;
+
+document.getElementById("robot").value = localStorage.zone;
+
+
+getteam(document.getElementById("matchid").value);
+</script>
+
+</html>
