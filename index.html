@@ -8,6 +8,29 @@
 <link href="bootstrap.min.css" rel="stylesheet" />
 <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
 
+
+<!-- tooltip test -->
+
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script>
+  $(function() {
+    $( document ).tooltip();
+  });
+  </script>
+  <style>
+  label {
+    display: inline-block;
+    width: 5em;
+  }
+  </style>
+
+<!-- end of tooltip -->
+
+
 <!-- Favicon -->
 <link rel="icon"  href="favicon.ico" />
 
@@ -160,11 +183,13 @@ traverse_humps_score
 
  -->
 
-<input type="number" value="0" name="push_totes" hidden id="push_totes" /> 
+<input type="number" value="0" name="autonomous" hidden id="autonomous" /> 
 <input type="number" value="0" name="maneuver" hidden id="maneuver" />
 <input type="number" value="0" name="traverse_humps" hidden id="traverse_humps" />
 <input type="number" value="0" name="traverse_humps_score" hidden id="traverse_humps_score" />
 <input type="number" value="0" name="can_lift" hidden id="can_lift" />
+<input type="number" value="0" name="can_score_step" hidden id="can_score_step" />
+<input type="number" value="0" name="can_score_ground" hidden id="can_score_ground" />
 
 
 <center>
@@ -178,7 +203,7 @@ traverse_humps_score
 							<table  style="width: 100%;">
 								<tr>
 									<td style="width: 87%;" onclick="window_1_open()">
-										<font style="font-size:20px; color: white;">Totes Pushed</font>
+										<font style="font-size:20px; color: white;">Autonomous</font>
 									</td>
 									<td style="width: 5%;">
 										<center>
@@ -203,11 +228,11 @@ traverse_humps_score
 											<center>
 												<div id="window_1_description">
 													<div id="window_1_panel_1_description">
-														<h3>Did the robot push around totes?</h3>
+														<h3>Did they have an autonomous?</h3>
 													<br>
 													</div>
 													<div id="window_1_panel_2_description" style="display: none;">
-														<h3>How many did they push at once?</h3>
+														<h3>did they create any of the following?</h3>
 													<br>
 													</div>
 												</div>
@@ -237,14 +262,34 @@ traverse_humps_score
 												<div id="window_1_panel_2_body"  style="display: none;">
 													<table style="width: 100%;">
 														<tr>
-															<td style="width: 40%">
+															<td style="width: 20%">
 															</td>
-															<td style="width: 20%;">
-																<center>
-																	<label for="push_totes_max" class="col-lg-2 control-label"></label>  <input type="number" name="push_totes_max" autocomplete="off" value="0" id="push_totes_max" class="form-control" />
-																</center>
+															<td style="width: 80%;">
+																
+																	<div class="checkbox">
+																		<label>
+																			<font style="font-size:20px;">
+																				<input type="checkbox" name="auto_tote_set" id="auto_tote_set"> Tote Set?
+																			</font>
+																		</label>
+																	</div>
+																	<div class="checkbox">
+																		<label>
+																			<font style="font-size:20px;">
+																				<input type="checkbox" name="auto_stack_tote_set" id="auto_stack_tote_set"> Stacked Tote Set?
+																			</font>
+																		</label>
+																	</div>
+																	<div class="checkbox">
+																		<label>
+																			<font style="font-size:20px;">
+																				<input type="checkbox" name="auto_container_set" id="auto_container_set"> Container Set?
+																			</font>
+																		</label>
+																	</div>
+																
 															</td>
-															<td style="width: 40%">
+															<td style="width: 0%">
 															</td>
 														</tr>
 													</table>
@@ -470,11 +515,11 @@ traverse_humps_score
 											<center>
 												<div id="window_4_description">
 													<div id="window_4_panel_1_description">
-														<h3>Did they lift a can?</h3>
+														<h3>Did they score a can?</h3>
 													<br>
 													</div>
 													<div id="window_4_panel_2_description" style="display: none;">
-														<h3>How many totes high was it lifted?</h3>
+														<h3>Where did they get the can?</h3>
 													<br>
 													</div>
 												</div>
@@ -504,42 +549,15 @@ traverse_humps_score
 												<div id="window_4_panel_2_body"  style="display: none;">
 													<table style="width: 100%;">
 														<tr>
-															<td style="width: 40%">
-															</td>
-															<td style="width: 20%;">
+															<td style="width: 50%;">
 																<center>
-																	<label for="can_lift_max" class="col-lg-2 control-label"></label>  <input type="number" name="can_lift_max" autocomplete="off" value="0" id="can_lift_max" class="form-control" />
+																	<button class="btn btn-info" type="button" onclick="window_4_panel_2_step()"><h3>Step</h3></button>
+								    								</center>
+								    							</td>
+								    							<td style="width: 50%;">
+								    								<center>	
+								    									<button class="btn btn-warning"  type="button" onclick="window_4_panel_2_ground()"><h3>Ground</h3></button>
 																</center>
-															</td>
-															<td style="width: 40%">
-															</td>
-														</tr>
-														<tr>
-															<td colspan="3">
-																<table style="width: 100%;">
-																	<tr>
-																		<td style="width: 10%;">
-																		</td>
-																		<td style="width: 30%;">
-																			<div class="checkbox">
-																				<label>
-																					<input type="checkbox" name="can_lift_upright" id="can_lift_upright"> Upright Cans?
-																				</label>
-																			</div>
-																		</td>
-																		<td style="width: 10%;">
-																		</td>
-																		<td style="width: 30%;">
-																			<div class="checkbox">
-																				<label>
-																					<input type="checkbox" name="can_lift_step" id="can_lift_step"> Grab from step?
-																				</label>
-																			</div>
-																		</td>
-																		<td style="width: 10%;">
-																		</td>
-																	</tr>
-																</table>
 															</td>
 														</tr>
 													</table>
@@ -663,7 +681,7 @@ traverse_humps_score
 							<table  style="width: 100%;">
 								<tr>
 									<td style="width: 87%;" onclick="window_6_open()">
-										<font style="font-size:20px; color: white;">Totes Stacks</font>
+										<font style="font-size:20px; color: white;">Totes Location</font>
 									</td>
 									<td style="width: 5%;">
 										<center>
@@ -687,10 +705,7 @@ traverse_humps_score
 										<td>
 											<center>
 												<div id="window_6_description">
-													<div id="window_6_panel_2_description" style="display: none;">
-														<h3>How many did they push at once?</h3>
-													<br>
-													</div>
+													<!-- nothing goes here -->
 												</div>
 												
 											</center>
@@ -700,9 +715,9 @@ traverse_humps_score
 										<td style="width: 100%;">
 											<div id="window_6_body">
 												<div id="window_6_panel_1_body">
-													<table style="width: 100%; display: none;">
+													<table style="width: 100%; display: none;"><!-- just going to leave this here for now -->
 														<tr>
-															<td style="width: 50%;">
+															<td style="width: 50%;"> 
 																<center>
 																	<button class="btn btn-success" type="button" onclick="window_6_panel_1_true()"><h3>&nbsp; <i class="fa fa-check"></i> &nbsp;</h3></button>
 								    								</center>
@@ -718,7 +733,10 @@ traverse_humps_score
 													<table style="width: 100%;">
 														<tr>
 															<td colspan="3">
-																<h3>How many stacks did they make?</h3>
+																<h3>Where did they get the totes?</h3>
+																<center>
+																	<h3>Landfill:</h3>
+																</center>
 															</td>
 														</tr>
 														<tr>
@@ -726,7 +744,7 @@ traverse_humps_score
 															</td>
 															<td style="width: 20%;">
 																<center>
-																	<label for="tote_stacks" class="col-lg-2 control-label"></label>  <input type="number" name="tote_stacks" autocomplete="off" value="0" id="tote_stacks" class="form-control" />
+																	<label for="tote_landfill" class="col-lg-2 control-label"></label>  <input type="number" name="tote_landfill" autocomplete="off" value="0" id="tote_landfill" class="form-control" />
 																</center>
 															</td>
 															<td style="width: 40%">
@@ -734,7 +752,9 @@ traverse_humps_score
 														</tr>
 														<tr>
 															<td colspan="3">
-																<h3>What was the average height?</h3>
+																<center>
+																	<h3>Feeder Slot:</h3>
+																</center>
 															</td>
 														</tr>
 														<tr>
@@ -742,7 +762,7 @@ traverse_humps_score
 															</td>
 															<td style="width: 20%;">
 																<center>
-																	<label for="tote_stacks_average" class="col-lg-2 control-label"></label>  <input type="number" name="tote_stacks_average" autocomplete="off" value="0" id="tote_stacks_average" class="form-control" />
+																	<label for="tote_feeder" class="col-lg-2 control-label"></label>  <input type="number" name="tote_feeder" autocomplete="off" value="0" id="tote_feeder" class="form-control" />
 																</center>
 															</td>
 															<td style="width: 40%">
@@ -752,6 +772,79 @@ traverse_humps_score
 												</div>
 												<div id="window_6_panel_2_body"  style="display: none;">
 													<!-- no panel 2 for this window -->
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</center>
+						</div>
+					</div>
+				</center>
+			</td>
+		</tr>
+		<tr>
+		
+		
+			<!-- comments section -->
+			<td colspan="5" style="width:100%">
+				<center>
+					<div class="panel panel-primary" style="display: block;" id="window_7">
+						<div class="panel-heading">
+							<table  style="width: 100%;">
+								<tr>
+									<td style="width: 87%;" onclick="window_7_open()">
+										<font style="font-size:20px; color: white;">Comments</font>
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_7_back()" hidden><i class="fa fa-caret-left" hidden></i></button>
+										</center>
+									</td>
+									<td style="width: 3%;">
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_7_close()"><i class="fa fa-times"></i></button>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="panel-body" id="window_7_field">
+							<center>
+								<table style="width: 100%;">    					
+									<tr>
+										<td>
+											<center>
+												<div id="window_7_description">
+													<h3>
+														What were some important things you noticed about their robot?
+													</h3>
+												</div>
+												
+											</center>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<div id="window_7_body">
+												<div id="window_7_panel_1_body">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 70%;">
+																<div class="form-group">
+																	<div class="col-lg-10">
+																		<center>
+																			<textarea class="form-control"  id="comments" name="comments" style="width: 100%;" title="What really stood out about their robot?"></textarea>
+																		</center>
+																		<span class="help-block"></span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+														
+													</table>
 												</div>
 											</div>
 										</td>
@@ -801,14 +894,13 @@ function window_1_panel_1_true()
 	document.getElementById("window_1_panel_2_body").style.display = 'block';
 	document.getElementById("window_1_panel_1_description").style.display = 'none';
 	document.getElementById("window_1_panel_1_body").style.display = 'none';
-	document.getElementById("push_totes").value = 1;
+	document.getElementById("autonomous").value = 1;
 }
 
 function window_1_panel_1_false()
 {
 	window_1_close();
-	document.getElementById("push_totes").value = 0;
-	document.getElementById("push_totes_max").value = 0;
+	document.getElementById("autonomous").value = 0;
 }
 </script>
 
@@ -930,16 +1022,27 @@ function window_4_panel_1_true()
 	document.getElementById("window_4_panel_2_body").style.display = 'block';
 	document.getElementById("window_4_panel_1_description").style.display = 'none';
 	document.getElementById("window_4_panel_1_body").style.display = 'none';
-	document.getElementById("can_lift").value = 1;
+	document.getElementById("can_score").value = 1;
 }
 
 function window_4_panel_1_false()
 {
 	window_4_close();
-	document.getElementById("can_lift").value = 0;
-	document.getElementById("can_lift_max").value = 0;
-	document.getElementById("can_lift_step").value = 0;
-	document.getElementById("can_lift_upright").value = 0;
+	document.getElementById("can_score").value = 0;
+	document.getElementById("can_score_step").value = 0;
+	document.getElementById("can_score_ground").value = 0;
+}
+
+function window_4_panel_2_step()
+{
+	window_4_close();
+	document.getElementById("window_4_panel_2_step").value = 1;
+}
+
+function window_4_panel_2_ground()
+{
+	window_4_close();
+	document.getElementById("window_4_panel_2_ground").value = 1;
 }
 </script>
 
@@ -985,8 +1088,8 @@ function window_5_panel_1_false()
 	document.getElementById("window_6").style.display = 'none';
 	document.getElementById("lift_totes").value = 0;
 	document.getElementById("lift_totes_max").value = 0;
-	document.getElementById("tote_stacks").value = 0;
-	document.getElementById("tote_stacks_average").value = 0;
+	document.getElementById("tote_landfill").value = 0;
+	document.getElementById("tote_feeder").value = 0;
 }
 </script>
 
@@ -1022,18 +1125,56 @@ function window_6_panel_1_true()
 	document.getElementById("window_6_panel_2_body").style.display = 'block';
 	document.getElementById("window_6_panel_1_description").style.display = 'none';
 	document.getElementById("window_6_panel_1_body").style.display = 'none';
-	document.getElementById("tote_stacks").value = 1;
+	document.getElementById("tote_landfill").value = 1;
 }
 
 function window_6_panel_1_false()
 {
 	window_6_close();
-	document.getElementById("tote_stacks").value = 0;
-	document.getElementById("tote_stacks_average").value = 0;
+	document.getElementById("tote_landfill").value = 0;
+	document.getElementById("tote_feeder").value = 0;
 }
 </script>
 
+<script>
+var window_7_panel;
 
+function window_7_close()
+{
+document.getElementById("window_7_field").style.display = 'none';
+}
+
+function window_7_open()
+{
+document.getElementById("window_7_field").style.display = 'block';
+}
+
+function window_7_back()
+{
+	if (window_7_panel == "2")
+	{
+	window_6_panel = 1;
+	document.getElementById("window_7_panel_2_description").style.display = 'none';
+	document.getElementById("window_7_panel_2_body").style.display = 'none';
+	document.getElementById("window_7_panel_1_description").style.display = 'block';
+	document.getElementById("window_7_panel_1_body").style.display = 'block';
+	}
+}
+
+function window_7_panel_1_true()
+{
+	window_7_panel = 2;
+	document.getElementById("window_7_panel_2_description").style.display = 'block';
+	document.getElementById("window_7_panel_2_body").style.display = 'block';
+	document.getElementById("window_7_panel_1_description").style.display = 'none';
+	document.getElementById("window_7_panel_1_body").style.display = 'none';
+}
+
+function window_7_panel_1_false()
+{
+	window_7_close();
+}
+</script>
 
 
 
@@ -1345,4 +1486,11 @@ document.getElementById("robot").value = localStorage.zone;
 getteam(document.getElementById("matchid").value);
 </script>
 
+<br>
+<br>
+<br>
+<br>
+
+
+</body>
 </html>
