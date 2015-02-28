@@ -992,6 +992,7 @@ function window_3_panel_1_false()
 
 <script>
 var window_4_panel;
+var can_score_step;
 
 function window_4_close()
 {
@@ -1035,14 +1036,14 @@ function window_4_panel_1_false()
 
 function window_4_panel_2_step()
 {
-	window_4_close();
-	document.getElementById("window_4_panel_2_step").value = 1;
+	
+	document.getElementById("can_score_step").value ++;
 }
 
 function window_4_panel_2_ground()
 {
-	window_4_close();
-	document.getElementById("window_4_panel_2_ground").value = 1;
+	
+	document.getElementById("can_score_ground").value ++;
 }
 </script>
 
