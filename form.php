@@ -76,7 +76,7 @@ foreach ($_POST as $key => $value)
 		} else {
 			echo mysqli_error($con);
 		}
-		$response[$row] .= $team . "," . $match . "," . $key . "," . $value . "," . "\n";
+		$response[$row] .= $team . "," . $match . "," . $key . "," . $value . "\n";
 		file_put_contents('scouting.csv',$response[$row], FILE_APPEND);
 		$row += 1;
 	}
