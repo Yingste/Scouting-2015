@@ -190,7 +190,8 @@ traverse_humps_score
 <input type="number" value="0" name="can_lift" hidden id="can_lift" />
 <input type="number" value="0" name="can_score_step" hidden id="can_score_step" />
 <input type="number" value="0" name="can_score_ground" hidden id="can_score_ground" />
-
+<input type="number" value="0" name="upstack" hidden id="upstack" />
+<input type="number" value="0" name="downstack" hidden id="downstack" />
 
 <center>
 	<table style="width: 90%; border: 1px ;">
@@ -232,7 +233,7 @@ traverse_humps_score
 													<br>
 													</div>
 													<div id="window_1_panel_2_description" style="display: none;">
-														<h3>did they create any of the following?</h3>
+														<h4>did they create any of the following?</h4>
 													<br>
 													</div>
 												</div>
@@ -287,6 +288,8 @@ traverse_humps_score
 																			</font>
 																		</label>
 																	</div>
+																	<hr>
+																	They got: <input type="number" name="auto_can_grab" id="auto_can_grab"style="width: 15%;"> cans from the step.
 																
 															</td>
 															<td style="width: 0%">
@@ -614,8 +617,12 @@ traverse_humps_score
 														<h3>Did they pick up totes?</h3>
 													<br>
 													</div>
-													<div id="window_5_panel_2_description" style="display: none;">
+													<div id="window_5_panel_3_description" style="display: none;">
 														<h3>How many did they pick up at once?</h3>
+													<br>
+													</div>
+													<div id="window_5_panel_2_description" style="display: none;">
+														<h3>How did they primarily pick up totes?</h3>
 													<br>
 													</div>
 												</div>
@@ -642,7 +649,7 @@ traverse_humps_score
 														</tr>
 													</table>
 												</div>
-												<div id="window_5_panel_2_body"  style="display: none;">
+												<div id="window_5_panel_3_body"  style="display: none;">
 													<table style="width: 100%;">
 														<tr>
 															<td style="width: 40%">
@@ -653,6 +660,22 @@ traverse_humps_score
 																</center>
 															</td>
 															<td style="width: 40%">
+															</td>
+														</tr>
+													</table>
+												</div>
+												<div id="window_5_panel_2_body"  style="display: none;">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 50%;">
+																<center>
+																	<button class="btn btn-info" type="button" onclick="window_5_panel_2_upstack()"><h4><strong>Upstack</strong></h4></button>
+								    								</center>
+								    							</td>
+								    							<td style="width: 50%;">
+								    								<center>	
+								    									<button class="btn btn-primary"  type="button" onclick="window_5_panel_2_downstack()"><h4><strong>Downstack</strong></h4></button>
+																</center>
 															</td>
 														</tr>
 													</table>
@@ -784,10 +807,99 @@ traverse_humps_score
 			</td>
 		</tr>
 		<tr>
-		
-		
+			<!-- Window 8 -->
+			<td style="width: 28%;">
+				<center>
+					<div class="panel panel-primary" style="display: block;" id="window_8">
+						<div class="panel-heading">
+							<table  style="width: 100%;">
+								<tr>
+									<td style="width: 87%;" onclick="window_8_open()">
+										<font style="font-size:20px; color: white;">Stack</font>
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_8_back()" ><i class="fa fa-caret-left" ></i></button>
+										</center>
+									</td>
+									<td style="width: 3%;">
+									</td>
+									<td style="width: 5%;">
+										<center>
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="window_8_close()"><i class="fa fa-times"></i></button>
+										</center>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="panel-body" id="window_8_field">
+							<center>
+								<table style="width: 100%;">    					
+									<tr>
+										<td>
+											<center>
+												<div id="window_8_description">
+													<div id="window_8_panel_1_description" style="display: block;">
+														<h3>Did they knock over a tote stack?</h3>
+													<br>
+													</div>
+													<div id="window_8_panel_2_description" style="display: none;">
+														<h3>How many did they knock over?</h3>
+													<br>
+													</div>
+												</div>
+												
+											</center>
+										</td>
+									</tr>
+									<tr>
+										<td style="width: 100%;">
+											<div id="window_8_body">
+												<div id="window_8_panel_1_body">
+													<table style="width: 100%; display: block;">
+														<tr>
+															<td style="width: 50%;"> 
+																<center>
+																	<button class="btn btn-success" type="button" onclick="window_8_panel_1_true()"><h3>&nbsp; <i class="fa fa-check"></i> &nbsp;</h3></button>
+								    								</center>
+								    							</td>
+								    							<td style="width: 50%;">
+								    								<center>	
+								    									<button class="btn btn-danger"  type="button" onclick="window_8_panel_1_false()"><h3>&nbsp; <i class="fa fa-times"></i> &nbsp;</h3></button>
+																</center>
+															</td>
+														</tr>
+													</table>
+													
+													
+												</div>
+												<div id="window_8_panel_2_body"  style="display: none;">
+													<table style="width: 100%;">
+														<tr>
+															<td style="width: 40%">
+															</td>
+															<td style="width: 20%;">
+																<center>
+																	<label for="knock_stacks" class="col-lg-2 control-label"></label>  <input type="number" name="knock_stacks" autocomplete="off" value="0" id="knock_stacks" class="form-control" />
+																</center>
+															</td>
+															<td style="width: 40%">
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</center>
+						</div>
+					</div>
+				</center>
+			</td>
+			<td style="width: 3%;"></td>
 			<!-- comments section -->
-			<td colspan="5" style="width:100%">
+			<td colspan="3" style="width:100%">
 				<center>
 					<div class="panel panel-primary" style="display: block;" id="window_7">
 						<div class="panel-heading">
@@ -1023,13 +1135,13 @@ function window_4_panel_1_true()
 	document.getElementById("window_4_panel_2_body").style.display = 'block';
 	document.getElementById("window_4_panel_1_description").style.display = 'none';
 	document.getElementById("window_4_panel_1_body").style.display = 'none';
-	document.getElementById("can_score").value = 1;
+	document.getElementById("lift_can").value = 1;
 }
 
 function window_4_panel_1_false()
 {
 	window_4_close();
-	document.getElementById("can_score").value = 0;
+	document.getElementById("lift_can").value = 0;
 	document.getElementById("can_score_step").value = 0;
 	document.getElementById("can_score_ground").value = 0;
 }
@@ -1070,6 +1182,14 @@ function window_5_back()
 	document.getElementById("window_5_panel_1_description").style.display = 'block';
 	document.getElementById("window_5_panel_1_body").style.display = 'block';
 	}
+	if (window_5_panel == "3")
+	{
+	window_5_panel = 2;
+	document.getElementById("window_5_panel_3_description").style.display = 'none';
+	document.getElementById("window_5_panel_3_body").style.display = 'none';
+	document.getElementById("window_5_panel_2_description").style.display = 'block';
+	document.getElementById("window_5_panel_2_body").style.display = 'block';
+	}
 }
 
 function window_5_panel_1_true()
@@ -1091,6 +1211,26 @@ function window_5_panel_1_false()
 	document.getElementById("lift_totes_max").value = 0;
 	document.getElementById("tote_landfill").value = 0;
 	document.getElementById("tote_feeder").value = 0;
+}
+
+function window_5_panel_2_upstack()
+{
+	window_5_panel = 3;
+	document.getElementById("window_5_panel_3_description").style.display = 'block';
+	document.getElementById("window_5_panel_3_body").style.display = 'block';
+	document.getElementById("window_5_panel_2_description").style.display = 'none';
+	document.getElementById("window_5_panel_2_body").style.display = 'none';
+	document.getElementById("upstack").value = 1;
+}
+
+function window_5_panel_2_downstack()
+{
+	window_5_panel = 3;
+	document.getElementById("window_5_panel_3_description").style.display = 'block';
+	document.getElementById("window_5_panel_3_body").style.display = 'block';
+	document.getElementById("window_5_panel_2_description").style.display = 'none';
+	document.getElementById("window_5_panel_2_body").style.display = 'none';
+	document.getElementById("downstack").value = 1;
 }
 </script>
 
@@ -1177,7 +1317,50 @@ function window_7_panel_1_false()
 }
 </script>
 
+<script>
+var window_8_panel;
 
+
+function window_8_close()
+{
+document.getElementById("window_8_field").style.display = 'none';
+}
+
+function window_8_open()
+{
+document.getElementById("window_8_field").style.display = 'block';
+}
+
+function window_8_back()
+{
+	if (window_8_panel == "2")
+	{
+	window_8_panel = 1;
+	document.getElementById("window_8_panel_2_description").style.display = 'none';
+	document.getElementById("window_8_panel_2_body").style.display = 'none';
+	document.getElementById("window_8_panel_1_description").style.display = 'block';
+	document.getElementById("window_8_panel_1_body").style.display = 'block';
+	}
+}
+
+function window_8_panel_1_true()
+{
+	window_8_panel = 2;
+	document.getElementById("window_8_panel_2_description").style.display = 'block';
+	document.getElementById("window_8_panel_2_body").style.display = 'block';
+	document.getElementById("window_8_panel_1_description").style.display = 'none';
+	document.getElementById("window_8_panel_1_body").style.display = 'none';
+	document.getElementById("knock_stacks").value = 1;
+}
+
+function window_8_panel_1_false()
+{
+	window_8_close();
+	document.getElementById("knock_stacks").value = 0;
+	
+}
+
+</script>
 
 
 
@@ -1491,6 +1674,74 @@ getteam(document.getElementById("matchid").value);
 <br>
 <br>
 <br>
+<!-- posting form --> 
+<form method="post" action="view.php" id="searchform">
+
+<!-- Navbar -->
+<nav class="navbar navbar-default" style="height:5%; display: none;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Pwnage</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">Match Scouting <span class="sr-only">(current)</span></a></li>
+        <li><a href="#" onclick="rank()">Ranks</a></li>
+      </ul>
+        <div class="form-group">
+          <input type="search" class="form-control" placeholder="Search" name="search" id="search" style="width: 40%; height: 100%;">
+        </div>
+    </div>
+  </div>
+</nav>
+
+
+<script>
+function rank()
+{
+	document.getElementById("search").value = 'rank';
+	document.forms["searchform"].submit();
+}
+
+function search2()
+{
+	document.getElementById("search").value = 'searchpage';
+	document.forms["searchform"].submit();
+}
+
+</script>
+</form>
+
+
+<center>
+<a href="#" onclick="search2()" class="btn btn-primary btn-sm">Search</a>
+<a href="#" onclick="rank()" class="btn btn-primary btn-sm">Rank</a>
+<a href="index.html" class="btn btn-primary btn-sm">Match</a>
+<a href="#" onclick="upload2()" class="btn btn-primary btn-sm">Upload</a>
+</center>
+
+<br><br>
+
+<script>
+function search2()
+{
+	document.getElementById("search").value = 'search';
+	document.forms["searchform"].submit();
+}
+
+function upload2()
+{
+	document.getElementById("search").value = 'upload';
+	document.forms["searchform"].submit();
+}
+
+</script>
 
 
 </body>

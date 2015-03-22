@@ -41,6 +41,20 @@ foreach ($_POST as $key => $value)
 		{
 			//echo "$value";
 			$team = $value;
+			if (strlen($team) == 1)
+			{
+			$team = "000" . "$team" ;
+			}
+			if (strlen($team) == 2)
+			{
+			$team = "00" . "$team" ;
+			}
+			if (strlen($team) == 3)
+			{
+			$team = "0" . "$team" ;
+			}
+
+			
 		}
 	if ($key == 'match')
 		{
