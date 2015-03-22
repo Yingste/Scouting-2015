@@ -6,4 +6,5 @@ The 2015 scouting software for PWNAGE Robotics.
 
 
 
-I still need to add the font-awesome folder.
+I plan on adding more to auton
+See what they can stack on?
